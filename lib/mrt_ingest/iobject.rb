@@ -45,8 +45,12 @@ module Mrt
               :primary_identifier => @primary_identifier)
       end
 
+      # Starts the web server for this object in a new thread. Returns
+      # the thread.
       def start_server
-        @server.run
+        Thread.new do
+          @server.run
+        end
       end
         
       def mk_manifest(manifest, erc_url)

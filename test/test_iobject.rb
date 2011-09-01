@@ -54,10 +54,8 @@ class TestIObject < Test::Unit::TestCase
         end
         assert(false, "Could not find mrt-erc.txt file!")
       end
-      t = Thread.new do
-        @iobject.start_server
-      end
-      open(erc_url).read()
+      t = @iobject.start_server
+      erc_lines = open(erc_url).read().lines().to_a
       t.join
     end
   end
