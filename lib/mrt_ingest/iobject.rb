@@ -5,10 +5,13 @@ module Mrt
   module Ingest
     # An object ready for ingest into Merritt.
     class IObject
-      def initialize(erc={})
-        @erc = erc
+      def initialize(options={})
+        @primary_identifier = options[:primary_identifier]
+        @local_identifier = options[:local_identifier]
+        @erc = options[:erc] || Hash.new
         @file_components = []
         @uri_components = []
+        @server = Mrt::Ingest::OneTimeServer.new
       end
       
       def add_component(component, name)
@@ -22,16 +25,31 @@ module Mrt
         end
       end
       
-      # Make a Mrt::Ingest::Request object for this
-      def mk_request
+      # Make a Mrt::Ingest::Request object for this mrt-object
+      def mk_request(profile, submitter)
+        erc_url = @server.add_file do |f|
+          @erc.each do |k, v|
+            f.write("#{k}: #{v}\n")
+          end
+        end
         manifest_file = Tempfile.new("mrt-ingest")
-        mk_manifest(manifest_file, urls)
+        mk_manifest(manifest_file, erc_url)
         # reset to beginning
-        manifest_file.open        
+        manifest_file.open
+        return Mrt::Ingest::Request.
+          new(:file               => manifest_file,
+              :filename           => manifest_file.path.split(/\//).last,
+              :type               => "object-manifest",
+              :submitter          => submitter,
+              :profile            => profile,
+              :primary_identifier => @primary_identifier)
       end
-      
-      private
-      def mk_manifest(manifest)
+
+      def start_server
+        @server.run
+      end
+        
+      def mk_manifest(manifest, erc_url)
         manifest.write("#%checkm_0.7\n")
         manifest.write("#%profile http://uc3.cdlib.org/registry/ingest/manifest/mrt-ingest-manifest\n")
         manifest.write("#%prefix | mrt: | http://uc3.cdlib.org/ontology/mom#\n")
@@ -40,9 +58,9 @@ module Mrt
         @uri_components.each { |uri|
           manifest.write("#{uri[0]} | | | | | #{url[1]} |\n")
         }
+        manifest.write("#{erc_url} | | | | | mrt-erc.txt\n")
         manifest.write("#%EOF\n")
       end
     end
   end
 end
-
