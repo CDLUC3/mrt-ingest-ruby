@@ -18,18 +18,21 @@ module Mrt
           end
         end
       end
-      
+
       def initialize
         @dir = Dir.mktmpdir
+        @mutex = Mutex.new
+        @known_paths = {}
         @requested = {}
-        file_callback = lambda do |req,res|
+        @port = get_open_port()
+        @file_callback = lambda do |req, res|
           @requested[req.path] ||= true
         end
-        @port = get_open_port()
+      
         config = { :Port => @port }
         @server = WEBrick::HTTPServer.new(config)
         @server.mount("/", WEBrick::HTTPServlet::FileHandler, @dir,
-                      { :FileCallback=>file_callback })
+                      { :FileCallback=>@file_callback })
       end
 
       # Return true if each file has been served.
@@ -42,30 +45,59 @@ module Mrt
         end
         return true
       end
-      
-      # Add a file to this server. Returns the URL to use to fetch the
-      # file.
-      def add_file
+
+      def get_temppath
         tmpfile = Tempfile.new("tmp", @dir)
-        tmpfile_path = tmpfile.path
+        tmppath = tmpfile.path
         tmpfile.close!
-        File.open(tmpfile_path, 'w+') do |f|
-          yield f
+        @mutex.synchronize do
+          if !@known_paths.has_key?(tmppath) then
+            # no collision
+            @known_paths[tmppath] = true
+            return tmppath
+          end
         end
-        return "http://#{Socket.gethostname}:#{@port}/#{File.basename(tmpfile_path)}"
+        # need to retry, there was a collision
+        return get_temppath
       end
 
-      # Run the server and wait until each file has been served once.
-      # Cleans up files before it returns.
-      def run
+      # Add a file to this server. Returns the URL to use to fetch the
+      # file.
+      def add_file(sourcefile=nil)
+        fullpath = get_temppath()
+        path = File.basename(fullpath)
+        if !sourcefile.nil? then
+          @server.mount("/#{path}",
+                        WEBrick::HTTPServlet::FileHandler,
+                        sourcefile.path,
+                        { :FileCallback=>@file_callback })
+        else
+          File.open(fullpath, 'w+') do |f|
+            yield f
+          end
+        end
+        return "http://#{Socket.gethostname}:#{@port}/#{path}"
+      end
+      
+      def start_server
         @thread = Thread.new do
           @server.start
         end
-        @thread.run
+        return @thread
+      end
+
+      def join_server
         # ensure that each file is requested once before shutting down
         while (!self.finished?) do sleep(1) end
         @server.shutdown 
         @thread.join
+      end
+      
+      # Run the server and wait until each file has been served once.
+      # Cleans up files before it returns.
+      def run
+        start_server()
+        join_server()
         #    FileUtils.rm_rf(@dir)
         return
       end
