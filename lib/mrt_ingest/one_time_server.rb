@@ -86,6 +86,13 @@ module Mrt
         return @thread
       end
 
+      # Stop server unconditionally.
+      def stop_server
+        @server.shutdown
+        @thread.join
+      end
+
+      # Wait for server to finish serving all files.
       def join_server
         # ensure that each file is requested once before shutting down
         while (!self.finished?) do sleep(1) end
