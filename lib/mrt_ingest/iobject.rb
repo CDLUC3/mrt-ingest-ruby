@@ -1,4 +1,5 @@
 require 'mrt_ingest'
+require 'tempfile'
 require 'uri'
 
 module Mrt
@@ -12,17 +13,16 @@ module Mrt
         @primary_identifier = options[:primary_identifier]
         @local_identifier = options[:local_identifier]
         @erc = options[:erc] || Hash.new
-        @file_components = []
-        @uri_components = []
+        @components = []
         @server = options[:server] || Mrt::Ingest::OneTimeServer.new
       end
       
       def add_component(component, name)
         case component
-          #when File
-          #  @file_components.push(component)
+        when File, Tempfile
+          @components.push([@server.add_file(component), name])
         when URI
-          @uri_components.push([component, name])
+          @components.push([component, name])
         else
           raise IngestException.new("Trying to add a component that is not a File or URI")
         end
@@ -33,7 +33,7 @@ module Mrt
         erc_url = case @erc
                   when URI
                     @erc
-                  when File
+                  when File, Tempfile
                     @server.add_file(@erc)
                   when Hash
                     @server.add_file do |f|
@@ -62,6 +62,10 @@ module Mrt
       def join_server
         return @server.join_server()
       end
+
+      def stop_server
+        return @server.stop_server()
+      end
         
       def mk_manifest(manifest, erc_url)
         manifest.write("#%checkm_0.7\n")
@@ -69,8 +73,8 @@ module Mrt
         manifest.write("#%prefix | mrt: | http://uc3.cdlib.org/ontology/mom#\n")
         manifest.write("#%prefix | nfo: | http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#\n")
         manifest.write("#%fields | nfo:fileUrl | nfo:hashAlgorithm | nfo:hashValue | nfo:fileSize | nfo:fileLastModified | nfo:fileName | mrt:mimeType\n")
-        @uri_components.each { |uri|
-          manifest.write("#{uri[0]} | | | | | #{url[1]} | \n")
+        @components.each { |c|
+          manifest.write("#{c[0]} | | | | | #{c[1]} | \n")
         }
         manifest.write("#{erc_url} | | | | | mrt-erc.txt | \n")
         manifest.write("#%EOF\n")

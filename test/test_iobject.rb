@@ -14,6 +14,20 @@ class TestIObject < Test::Unit::TestCase
     return Checkm::Manifest.new(args['file'].read())
   end
 
+  def write_to_tempfile(content)
+    tempfile = Tempfile.new('test_iobject')
+    tempfile << content
+    tempfile.open
+    return tempfile
+  end
+
+  def get_uri_for_name(iobject, name)
+    manifest = parse_object_manifest(iobject)
+    return manifest.entries.find { |entry|
+      entry.values[-2] == name
+    }
+  end
+
   context "when creating an iobject" do
     setup do
       @iobject = Mrt::Ingest::IObject.new
@@ -40,9 +54,7 @@ class TestIObject < Test::Unit::TestCase
     setup do
       @iobject = Mrt::Ingest::IObject.new
       @manifest = parse_object_manifest(@iobject)
-      @erc_pos = @manifest.entries.find_index { |entry| 
-        entry.values[-2] == "mrt-erc.txt" 
-      }
+      @erc_entry = get_uri_for_name(@iobject, "mrt-erc.txt")
     end
     
     should "generate a valid manifest file with more than one line" do
@@ -50,13 +62,12 @@ class TestIObject < Test::Unit::TestCase
     end
     
     should "have a mrt-erc.txt entry, and it should be fetchable" do
-      if @erc_pos.nil?
+      if @erc_entry.nil?
         assert(false, "Could not find mrt-erc.txt file!")
       else
-        erc_url = @manifest.entries[@erc_pos].values[0]
         @iobject.start_server()
-        erc_lines = open(erc_url).read().lines().to_a
-        @iobject.join_server()
+        erc_lines = open(@erc_entry.values[0]).read().lines().to_a
+        @iobject.stop_server()
       end
     end
   end
@@ -69,22 +80,36 @@ EOS
 
   context "different ERC options" do
     should "be able to specify a file for ERC" do
-      erc_tempfile = Tempfile.new('test_iobject')
-      erc_tempfile << ERC_CONTENT
-      # reset to beginning
-      erc_tempfile.open
+      erc_tempfile = write_to_tempfile(ERC_CONTENT)
       iobject = Mrt::Ingest::IObject.new(:erc=>File.new(erc_tempfile.path))
-      manifest = parse_object_manifest(iobject)
-      erc_pos = manifest.entries.find_index { |entry| 
-        entry.values[-2] == "mrt-erc.txt" 
-      }
-      if erc_pos.nil?
+      erc_entry = get_uri_for_name(iobject, "mrt-erc.txt")
+      if erc_entry.nil?
         assert(false, "Could not find mrt-erc.txt file!")
       else
+        iobject.start_server()
+        assert_equal(ERC_CONTENT, open(erc_entry.values[0]).read())
+        iobject.stop_server()
+      end
+    end
+  end
+  
+  FILE_CONTENT = <<EOS
+Hello, world!
+EOS
+
+  context "serving local files" do
+    should "be able to add a local file component" do
+      iobject = Mrt::Ingest::IObject.new
+      tempfile = write_to_tempfile(FILE_CONTENT)
+      iobject.add_component(tempfile, "helloworld")
+      uri_entry = get_uri_for_name(iobject, "helloworld")
+      erc_entry = get_uri_for_name(iobject, "mrt-erc.txt")
+      if uri_entry.nil?
+        assert(false, "Could not find hosted file URI!")
+      else
         iobject.start_server
-        erc_url = manifest.entries[erc_pos].values[0]
-        assert_equal(ERC_CONTENT, open(erc_url).read())
-        iobject.join_server
+        assert_equal(FILE_CONTENT, open(uri_entry.values[0]).read())
+        iobject.stop_server()
       end
     end
   end
