@@ -88,6 +88,10 @@ module Mrt
         @response = client.ingest(request)
         return @response
       end
+
+      def finish_ingest
+        join_server
+      end
     end
   end
 end
