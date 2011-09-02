@@ -2,7 +2,7 @@ require 'rubygems'
 
 require 'fakeweb'
 require 'mocha'
-require 'mrt_ingest'
+require 'mrt/ingest'
 require 'shoulda'
 
 class TestRequest < Test::Unit::TestCase

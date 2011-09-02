@@ -3,7 +3,7 @@ require 'rubygems'
 require 'checkm'
 require 'fakeweb'
 require 'mocha'
-require 'mrt_ingest'
+require 'mrt/ingest'
 require 'shoulda'
 require 'open-uri'
 

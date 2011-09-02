@@ -1,4 +1,4 @@
-require 'mrt_ingest'
+require 'mrt/ingest'
 require 'tempfile'
 require 'uri'
 
