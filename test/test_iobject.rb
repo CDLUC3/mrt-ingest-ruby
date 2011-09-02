@@ -1,5 +1,6 @@
 require 'rubygems'
 
+require 'checkm'
 require 'fakeweb'
 require 'mocha'
 require 'mrt_ingest'
@@ -34,29 +35,24 @@ class TestIObject < Test::Unit::TestCase
       @iobject = Mrt::Ingest::IObject.new
       @req = @iobject.mk_request("profile", "submitter")
       @args = @req.mk_args
-      @manifest = @args['file'].read().lines().to_a
+      @manifest = Checkm::Manifest.new(@args['file'].read())
     end
     
-    should "generate a valid manifest file" do
-      assert_equal("#%checkm_0.7\n", @manifest[0])
+    should "generate a valid manifest file with more than one line" do
+      assert(@manifest.entries.length > 0, "Empty manifest?")
     end
     
     should "have a mrt-erc.txt entry, and it should be fetchable" do
-      erc_url = nil
-      catch :done do
-        @manifest.each do |line|
-          parts = line.split(/\s+/)
-          if parts[-1] == "mrt-erc.txt" then
-            erc_url = parts[0]
-            assert(true)
-            throw :done
-          end
-        end
+      erc_pos = @manifest.entries.find_index { |entry| 
+        entry.values[-2] == "mrt-erc.txt" }
+      if erc_pos.nil?
         assert(false, "Could not find mrt-erc.txt file!")
+      else
+        erc_url = @manifest.entries[erc_pos].values[0]
+        t = @iobject.start_server
+        erc_lines = open(erc_url).read().lines().to_a
+        t.join
       end
-      t = @iobject.start_server
-      erc_lines = open(erc_url).read().lines().to_a
-      t.join
     end
   end
 end
