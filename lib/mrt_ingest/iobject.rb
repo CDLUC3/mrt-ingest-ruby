@@ -17,11 +17,13 @@ module Mrt
         @server = options[:server] || Mrt::Ingest::OneTimeServer.new
       end
       
-      def add_component(component, name)
+      def add_component(component, name=nil)
         case component
         when File, Tempfile
+          name = File.basename(component.path) if name.nil?
           @components.push([@server.add_file(component), name])
         when URI
+          name = File.basename(component.to_s) if name.nil?
           @components.push([component, name])
         else
           raise IngestException.new("Trying to add a component that is not a File or URI")
@@ -78,6 +80,13 @@ module Mrt
         }
         manifest.write("#{erc_url} | | | | | mrt-erc.txt | \n")
         manifest.write("#%EOF\n")
+      end
+      
+      def start_ingest(client, profile, submitter)
+        request = mk_request(profile, submitter)
+        start_server
+        @response = client.ingest(request)
+        return @response
       end
     end
   end
