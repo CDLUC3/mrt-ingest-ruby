@@ -1,3 +1,6 @@
+# Author::    Erik Hetzner  (mailto:erik.hetzner@ucop.edu)
+# Copyright:: Copyright (c) 2011, Regents of the University of California
+
 require 'webrick'
 
 # An HTTP server that will serve each file ONCE before shutting down.
