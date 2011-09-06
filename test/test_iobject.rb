@@ -37,12 +37,12 @@ class TestIObject < Test::Unit::TestCase
     end
     
     should "be able to add a URI component" do
-      @iobject.add_component(URI.parse("http://example.org/file"), "file")
+      @iobject.add_component(URI.parse("http://example.org/file"))
     end
 
     should "not be able to add a non-URI component" do
       assert_raise(Mrt::Ingest::IngestException) do
-        @iobject.add_component("http://example.org/file", "file")
+        @iobject.add_component("http://example.org/file")
       end
     end
     
@@ -100,13 +100,16 @@ EOS
 Hello, world!
 EOS
 
+  FILE_CONTENT_MD5 = "746308829575e17c3331bbcb00c0898b"
+
   context "serving local files" do
     should "be able to add a local file component" do
       iobject = Mrt::Ingest::IObject.new
       tempfile = write_to_tempfile(FILE_CONTENT)
-      iobject.add_component(tempfile, "helloworld")
+      iobject.add_component(tempfile, {:name => "helloworld" })
       uri_entry = get_uri_for_name(iobject, "helloworld")
       erc_entry = get_uri_for_name(iobject, "mrt-erc.txt")
+      manifest = parse_object_manifest(iobject)
       if uri_entry.nil?
         assert(false, "Could not find hosted file URI!")
       else

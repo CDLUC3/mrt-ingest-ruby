@@ -64,8 +64,8 @@ module Mrt
         return get_temppath
       end
 
-      # Add a file to this server. Returns the URL to use to fetch the
-      # file.
+      # Add a file to this server. Returns the URL to use
+      # to fetch the file & the file path
       def add_file(sourcefile=nil)
         fullpath = get_temppath()
         path = File.basename(fullpath)
@@ -79,7 +79,7 @@ module Mrt
             yield f
           end
         end
-        return "http://#{Socket.gethostname}:#{@port}/#{path}"
+        return "http://#{Socket.gethostname}:#{@port}/#{path}", fullpath
       end
       
       def start_server
