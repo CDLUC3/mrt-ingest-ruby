@@ -1,0 +1,37 @@
+===================
+ mrt-ingest (ruby)
+===================
+  :Date: 6 Sept. 2011
+  :Author: Erik Hetzner <erik.hetzner@ucop.edu>
+
+What?
+-----
+
+A Ruby ingest client for Merritt_.
+
+Install
+-------
+
+::
+
+  $ gem build mrt-ingest.gemspec
+  $ sudo gem install mrt-ingest-0.1.1.gem
+
+How?
+----
+
+::
+
+  require 'rubygems'
+  require 'mrt/ingest'
+  client = Mrt::Ingest::Client.new("http://merritt.cdlib.org/object/ingest", USERNAME, PASSWORD)
+  obj = Mrt::Ingest::IObject.new(:erc => {
+    "who"          => "Doe, John",
+    "what"         => "Hello, world",
+    "when/created" => "2011" })
+  obj.add_component(File.new("/tmp/helloworld_a"))
+  obj.add_component(File.new("/tmp/helloworld_b"))
+  obj.start_ingest(client, "demo_merritt_content", "me/My Name")
+  obj.finish_ingest()
+
+.. _Merritt: http://merritt.cdlib.org/
