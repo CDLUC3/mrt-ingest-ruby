@@ -1,5 +1,5 @@
 require 'rake/testtask'
-require 'rake/rdoctask'
+require 'rdoc/task'
 
 require 'bundler'
 include Rake::DSL
@@ -12,7 +12,6 @@ Rake::TestTask.new(:test) do |t|
   t.verbose = true
 end
 
-Rake::RDocTask.new do |rd|
-#  rd.main = "README.rdoc"
+RDoc::Task.new do |rd|
   rd.rdoc_files.include("lib/**/*.rb")
 end
