@@ -6,11 +6,15 @@ module Mrt
     class RequestException < Exception
     end
 
+    # Represents a request to be sent to an ingest server.
     class Request
       attr_accessor :creator, :date, :local_identifier,
                     :primary_identifier, :profile, :note, :submitter,
                     :title, :type
 
+      # Options is a hash; required are :profile, :submitter, :type.
+      # May also include :creator, :date, :digest, :file, :filename,
+      # :local_identifier, :primary_identifier, :note, :title.
       def initialize(options)
         @creator = options[:creator]
         @date = options[:date]
@@ -29,6 +33,7 @@ module Mrt
         end
       end
       
+      # Returns a hash of arguments suitable for sending to a server.
       def mk_args
         return {
           'creator'           => @creator,

@@ -7,7 +7,9 @@ require 'uri'
 
 module Mrt
   module Ingest
-    class Component
+    # Represents a component of an object to ingest. Either a #URI or a
+    # #File.
+    class Component # :nodoc:
       def initialize(server, where, options)
         @name = options[:name]
         @digest = options[:digest]
@@ -41,11 +43,14 @@ module Mrt
       end
     end
     
-    # An object ready for ingest into Merritt.
+    # An object prepared for ingest into Merritt.
     class IObject
       
-      attr_accessor :primary_identifier, :local_identifier, :erc, :erc_file
+      attr_accessor :primary_identifier, :local_identifier, :erc
 
+      # Options can have the keys :primary_identifier,
+      # :local_identifier, :server, or :erc. :erc can be a #File, #Uri
+      # or a #Hash of metadata. :server is a #OneTimeServer.
       def initialize(options={})
         @primary_identifier = options[:primary_identifier]
         @local_identifier = options[:local_identifier]
@@ -54,6 +59,11 @@ module Mrt
         @server = options[:server] || Mrt::Ingest::OneTimeServer.new
       end
       
+      # Add a component to the object. where can be either a #URI or a
+      # #File. Options is a hash whose keys may be :name, :digest,
+      # :mime_type, or :size. If :digest is supplied, it must be a
+      # subclass of Mrt::Ingest::MessageDigest::Base. If where is a
+      # #File, it will be hosted on an embedded web server.
       def add_component(where, options={})
         @components.push(Component.new(@server, where, options))
       end
@@ -87,19 +97,19 @@ module Mrt
               :primary_identifier => @primary_identifier)
       end
 
-      def start_server
+      def start_server # :nodoc:
         return @server.start_server()
       end
 
-      def join_server
+      def join_server # :nodoc:
         return @server.join_server()
       end
 
-      def stop_server
+      def stop_server # :nodoc:
         return @server.stop_server()
       end
         
-      def mk_manifest(manifest, erc_component)
+      def mk_manifest(manifest, erc_component) # :nodoc:
         manifest.write("#%checkm_0.7\n")
         manifest.write("#%profile http://uc3.cdlib.org/registry/ingest/manifest/mrt-ingest-manifest\n")
         manifest.write("#%prefix | mrt: | http://uc3.cdlib.org/ontology/mom#\n")
@@ -112,6 +122,8 @@ module Mrt
         manifest.write("#%EOF\n")
       end
       
+      # Begin an ingest on the given client, with a profile and
+      # submitter.
       def start_ingest(client, profile, submitter)
         request = mk_request(profile, submitter)
         start_server
@@ -119,7 +131,10 @@ module Mrt
         return @response
       end
 
+      # Wait for the ingest of this object to finish.
       def finish_ingest
+        # XXX Right now we only join the hosting server; in the future
+        # we will check the status via the ingest server.
         join_server
       end
     end
