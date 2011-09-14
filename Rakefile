@@ -1,3 +1,4 @@
+# -*- ruby -*-
 require 'rake/testtask'
 require 'rdoc/task'
 
@@ -13,5 +14,8 @@ Rake::TestTask.new(:test) do |t|
 end
 
 RDoc::Task.new do |rd|
-  rd.rdoc_files.include("lib/**/*.rb")
+  rd.title = "Merritt Ingest Client"
+  rd.rdoc_files.include("README", "lib/**/*.rb")
+
+  rd.options += ['-f', 'darkfish',]
 end
