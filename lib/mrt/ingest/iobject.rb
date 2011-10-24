@@ -19,7 +19,7 @@ module Mrt
         case where
         when File, Tempfile
           @name = File.basename(where.path) if @name.nil?
-          @uri = server.add_file(where)
+          @uri = server.add_file(where)[0]
           if @digest.nil? then
             @digest = Mrt::Ingest::MessageDigest::MD5.from_file(where)
           end
@@ -75,14 +75,16 @@ module Mrt
                           Component.new(@server, @erc, :name => 'mrt-erc.txt')
                         when Hash
                           uri_str, path = @server.add_file do |f|
-                            @erc.each do |k, v|
-                              f.write("#{k}: #{v}\n")
+                            @erc.each_pair do |k, v|
+                              f.write("#{k}: #{k}\n")
                             end
                           end
                           Component.new(@server, 
                                         URI.parse(uri_str), 
                                         :name => 'mrt-erc.txt',
                                         :digest => Mrt::Ingest::MessageDigest::MD5.from_file(File.new(path)))
+                        else
+                          raise IngestException.new("Bad ERC supplied: must be a URI, File, or Hash")
                         end
         manifest_file = Tempfile.new("mrt-ingest")
         mk_manifest(manifest_file, erc_component)
