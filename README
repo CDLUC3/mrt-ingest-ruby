@@ -9,7 +9,7 @@ A Ruby ingest client for Merritt[http://merritt.cdlib.org/].
 == Install
 
   $ gem build mrt-ingest.gemspec
-  $ sudo gem install mrt-ingest-0.1.1.gem
+  $ sudo gem install mrt-ingest-0.0.1.gem
 
 == How?
 
