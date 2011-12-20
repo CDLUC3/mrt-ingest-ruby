@@ -8,8 +8,9 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Erik Hetzner"]
   s.email       = ["erik.hetzner@ucop.edu"]
-  s.homepage    = ""
+  s.homepage    = "http://bitbucket.org/merritt/mrt-ingest-ruby"
   s.summary     = %q{A client for Merritt ingest.}
+  s.description = %q{A client for the Merritt ingest system. More details available from http://wiki.ucop.edu/display/curation.}
 
   s.add_dependency "json", ">=1.5.0"
   s.add_dependency "rest-client", ">=1.6.0"
