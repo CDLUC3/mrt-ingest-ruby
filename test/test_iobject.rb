@@ -31,7 +31,26 @@ class TestIObject < Test::Unit::TestCase
     }
   end
 
-  context "when creating an iobject" do
+  def parse_erc(erc)
+    return Hash[erc.map { |l| l.chomp.split(/:\s+/) }]
+  end
+
+  def parse_erc_entry(erc_entry)
+    return parse_erc(open(erc_entry.values[0]).read())
+  end
+
+  def check_erc_content(iobject, asserted_erc)
+    erc_entry = get_uri_for_name(iobject, "mrt-erc.txt")
+    if erc_entry.nil?
+      assert(false, "Could not find mrt-erc.txt file!")
+    else
+      iobject.start_server()
+      assert_equal(asserted_erc, parse_erc_entry(erc_entry))
+      iobject.stop_server()
+    end
+  end
+
+  context "an iobject" do
     setup do
       @iobject = Mrt::Ingest::IObject.new
     end
@@ -81,18 +100,20 @@ what: Something
 when: now
 EOS
 
-  context "different ERC options" do
+  context "an iobject" do
     should "be able to specify a file for ERC" do
       erc_tempfile = write_to_tempfile(ERC_CONTENT)
       iobject = Mrt::Ingest::IObject.new(:erc=>File.new(erc_tempfile.path))
-      erc_entry = get_uri_for_name(iobject, "mrt-erc.txt")
-      if erc_entry.nil?
-        assert(false, "Could not find mrt-erc.txt file!")
-      else
-        iobject.start_server()
-        assert_equal(ERC_CONTENT, open(erc_entry.values[0]).read())
-        iobject.stop_server()
-      end
+      check_erc_content(iobject, parse_erc(ERC_CONTENT))
+    end
+    
+    should "be able to use a hash for ERC" do
+      erc = { 
+        "who" => "John Doe",
+        "what" => "Something",
+        "when" => "now" }
+      iobject = Mrt::Ingest::IObject.new(:erc=>erc)
+      check_erc_content(iobject, erc)
     end
   end
   

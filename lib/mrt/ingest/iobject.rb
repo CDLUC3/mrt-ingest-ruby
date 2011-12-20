@@ -76,7 +76,7 @@ module Mrt
                         when Hash
                           uri_str, path = @server.add_file do |f|
                             @erc.each_pair do |k, v|
-                              f.write("#{k}: #{k}\n")
+                              f.write("#{k}: #{v}\n")
                             end
                           end
                           Component.new(@server, 
