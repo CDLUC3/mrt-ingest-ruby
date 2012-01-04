@@ -7,4 +7,5 @@ group :test do
   gem "fakeweb"
   gem "mocha"
   gem "checkm", ">=0.0.6"
+  gem "shoulda"
 end
