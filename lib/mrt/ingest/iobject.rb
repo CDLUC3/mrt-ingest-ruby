@@ -4,6 +4,8 @@
 require 'mrt/ingest'
 require 'tempfile'
 require 'uri'
+require 'open-uri'
+require 'digest/md5'
 
 module Mrt
   module Ingest
@@ -15,7 +17,8 @@ module Mrt
         @digest = options[:digest]
         @mime_type = options[:mime_type]
         @size = options[:size]
-        
+        @prefetch = options[:prefetch] || false
+
         case where
         when File, Tempfile
           @name = File.basename(where.path) if @name.nil?
@@ -26,7 +29,20 @@ module Mrt
           @size = File.size(where.path) if @size.nil?
         when URI
           @name = File.basename(where.to_s) if @name.nil?
-          @uri = where
+          if @prefetch then
+            digest = Digest::MD5.new()
+            @uri = server.add_file do |f|
+              open(where) do |u|
+                while (buff = u.read(1024)) do
+                  f << buff
+                  digest << buff
+                end
+              end
+            end
+            @digest = Mrt::Ingest::MessageDigest::MD5.new(digest.hexdigest)
+          else
+            @uri = where
+          end
         else
           raise IngestException.new("Trying to add a component that is not a File or URI")
         end

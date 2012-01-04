@@ -9,6 +9,7 @@ require 'mocha'
 require 'mrt/ingest'
 require 'shoulda'
 require 'open-uri'
+require 'socket'
 
 class TestIObject < Test::Unit::TestCase
   def parse_object_manifest(iobject)
@@ -57,6 +58,16 @@ class TestIObject < Test::Unit::TestCase
     
     should "be able to add a URI component" do
       @iobject.add_component(URI.parse("http://example.org/file"))
+    end
+
+    should "be able to add a URI component with prefetching, served locally" do
+      @iobject.add_component(URI.parse("http://example.org/file"), :prefetch=>true)
+      manifest = parse_object_manifest(@iobject)
+      manifest.entries.each do |entry|
+        # check that all files are served locally
+        uri = URI.parse(entry.values[0])
+        assert_equal(Socket.gethostname, uri.host)
+      end
     end
 
     should "not be able to add a non-URI component" do
