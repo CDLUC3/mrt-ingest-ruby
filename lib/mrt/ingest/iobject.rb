@@ -31,8 +31,8 @@ module Mrt
           @name = File.basename(where.to_s) if @name.nil?
           if @prefetch then
             digest = Digest::MD5.new()
-            @uri = server.add_file do |f|
-              open(where) do |u|
+            @uri, ignore = server.add_file do |f|
+              open(where, (options[:prefetch_options] || {})) do |u|
                 while (buff = u.read(1024)) do
                   f << buff
                   digest << buff
