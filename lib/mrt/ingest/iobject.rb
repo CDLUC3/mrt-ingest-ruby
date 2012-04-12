@@ -91,6 +91,7 @@ module Mrt
                           Component.new(@server, @erc, :name => 'mrt-erc.txt')
                         when Hash
                           uri_str, path = @server.add_file do |f|
+                            f.write("erc:\n")
                             @erc.each_pair do |k, v|
                               f.write("#{k}: #{v}\n")
                             end

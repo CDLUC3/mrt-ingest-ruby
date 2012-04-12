@@ -33,7 +33,13 @@ class TestIObject < Test::Unit::TestCase
   end
 
   def parse_erc(erc)
-    return Hash[erc.map { |l| l.chomp.split(/:\s+/) }]
+    arr = erc.map do |line|
+      md = line.chomp.match(/^([^:]+):\s*(.*)$/)
+      [md[1], md[2]]
+    end.flatten
+    h = Hash[*arr]
+    h.delete("erc")
+    return h
   end
 
   def parse_erc_entry(erc_entry)
