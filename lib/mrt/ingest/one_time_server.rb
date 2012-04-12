@@ -83,8 +83,13 @@ module Mrt
       end
       
       def start_server
-        @thread = Thread.new do
-          @server.start
+        if @thread.nil? then
+          @thread = Thread.new do
+            @server.start
+          end
+        end
+        while (@server.status != :Running) do
+          sleep(0.1)
         end
         return @thread
       end
