@@ -33,7 +33,7 @@ class TestIObject < Test::Unit::TestCase
   end
 
   def parse_erc(erc)
-    arr = erc.map do |line|
+    arr = erc.lines.map do |line|
       md = line.chomp.match(/^([^:]+):\s*(.*)$/)
       [md[1], md[2]]
     end.flatten
