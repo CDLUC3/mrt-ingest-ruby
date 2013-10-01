@@ -67,7 +67,7 @@ class TestIObject < Test::Unit::TestCase
     end
 
     should "be able to add a URI component with prefetching, served locally" do
-      @iobject.add_component(URI.parse("http://example.org/file"), :prefetch=>true)
+      @iobject.add_component(URI.parse("http://example.org/"), :prefetch=>true)
       manifest = parse_object_manifest(@iobject)
       manifest.entries.each do |entry|
         # check that all files are served locally
