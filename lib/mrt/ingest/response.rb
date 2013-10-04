@@ -10,19 +10,19 @@ module Mrt
   module Ingest
     class Response
       def initialize(data)
-        @parsed = JSON.parse(data)['batchState']
+        @parsed = JSON.parse(data)['bat:batchState']
       end
       
       def batch_id
-        return @parsed['batchID']
+        return @parsed['bat:batchID']
       end
       
       def user_agent
-        return @parsed['userAgent']
+        return @parsed['bat:userAgent']
       end
       
       def submission_date
-        return Time.parse(@parsed['submissionDate'])
+        return Time.parse(@parsed['bat:submissionDate'])
       end
     end
   end
