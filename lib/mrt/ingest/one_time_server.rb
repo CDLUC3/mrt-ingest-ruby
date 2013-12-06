@@ -9,7 +9,7 @@ module Mrt
     class OneTimeServer
       # Find an open port, starting with start and adding one until we get
       # an open port
-      def get_open_port(start=8080)
+      def get_open_port(start=8081)
         try_port = start
         while (true)
           begin
