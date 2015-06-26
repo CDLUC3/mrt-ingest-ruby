@@ -113,6 +113,7 @@ module Mrt
               :type               => "object-manifest",
               :submitter          => submitter,
               :profile            => profile,
+              :local_identifier => @local_identifier,
               :primary_identifier => @primary_identifier)
       end
 
