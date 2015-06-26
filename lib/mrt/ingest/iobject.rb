@@ -17,7 +17,8 @@ module Mrt
         @digest = options[:digest]
         @mime_type = options[:mime_type]
         @size = options[:size]
-        @prefetch = options[:prefetch] || false
+        # @prefetch = options[:prefetch] || false
+        @prefetch = false
 
         case where
         when File, Tempfile
