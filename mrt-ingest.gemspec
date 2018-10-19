@@ -3,11 +3,11 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "mrt-ingest"
-  s.version     = "0.0.2"
+  s.version     = "0.0.3"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Erik Hetzner"]
-  s.email       = ["erik.hetzner@ucop.edu"]
-  s.homepage    = "http://bitbucket.org/merritt/mrt-ingest-ruby"
+  s.email       = ["mark.reyes@ucop.edu"]
+  s.homepage    = "https://github.com/CDLUC3/mrt-ingest-ruby"
   s.summary     = %q{A client for Merritt ingest.}
   s.description = %q{A client for the Merritt ingest system. More details available from http://wiki.ucop.edu/display/curation.}
 
