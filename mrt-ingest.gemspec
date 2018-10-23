@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.license     = "BSD-3-Clause"
 
   s.add_dependency "json", "~> 2.0"
-  s.add_dependency "rest-client", "~> 1.6", ">=1.6.0"
+  s.add_dependency "rest-client", "~> 2.0"
 
   s.add_development_dependency "bundler"
   s.add_development_dependency "checkm", "0.0.6"
