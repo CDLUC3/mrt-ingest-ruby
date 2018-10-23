@@ -58,6 +58,18 @@ class TestIObject < Test::Unit::TestCase
     end
   end
 
+  context "an iobject with local ID" do
+    setup do
+      @local_id = '10.1098/rstl.1665.0007'
+      @iobject = Mrt::Ingest::IObject.new(local_identifier: @local_id)
+    end
+
+    should "include that local ID in the resuest" do
+      request = @iobject.mk_request("profile", "submitter")
+      assert_equal(@local_id, request.local_identifier)
+    end
+  end
+
   context "an iobject" do
     setup do
       @iobject = Mrt::Ingest::IObject.new
