@@ -3,6 +3,7 @@
 
 require 'rubygems'
 
+require 'test/unit'
 require 'checkm'
 require 'fakeweb'
 require 'mocha'
@@ -66,15 +67,16 @@ class TestIObject < Test::Unit::TestCase
       @iobject.add_component(URI.parse("http://example.org/file"))
     end
 
-    should "be able to add a URI component with prefetching, served locally" do
-      @iobject.add_component(URI.parse("http://example.org/"), :prefetch=>true)
-      manifest = parse_object_manifest(@iobject)
-      manifest.entries.each do |entry|
-        # check that all files are served locally
-        uri = URI.parse(entry.values[0])
-        assert_equal(Socket.gethostname, uri.host)
-      end
-    end
+    # TODO: remove prefetch code
+    # should "be able to add a URI component with prefetching, served locally" do
+    #   @iobject.add_component(URI.parse("http://example.org/"), :prefetch=>true)
+    #   manifest = parse_object_manifest(@iobject)
+    #   manifest.entries.each do |entry|
+    #     # check that all files are served locally
+    #     uri = URI.parse(entry.values[0])
+    #     assert_equal(Socket.gethostname, uri.host)
+    #   end
+    # end
 
     should "not be able to add a non-URI component" do
       assert_raise(Mrt::Ingest::IngestException) do

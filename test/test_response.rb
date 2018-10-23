@@ -3,6 +3,7 @@
 
 require 'rubygems'
 
+require 'test/unit'
 require 'fakeweb'
 require 'mocha'
 require 'mrt/ingest'
@@ -12,38 +13,38 @@ class TestResponse < Test::Unit::TestCase
   RESPONSE_JSON = <<EOS
 {
 
-    "batchState": {
-        "batchID":"bid-8c0fa0c2-f3d7-4deb-bd49-f953f6752b59",
-        "updateFlag":false,
-        "targetQueue":"example.org:2181",
-        "batchStatus":"QUEUED",
-        "userAgent":"egh/Erik Hetzner",
-        "submissionDate":"2011-08-31T15:40:26-07:00",
-        "targetQueueNode":"/ingest.example.1",
-        "batchProfile": {
-            "owner":"ark:/99999/fk4tt4wsh",
-            "creationDate":"2010-01-19T13:28:14-08:00",
-            "targetStorage": {
-                "storageLink":"http://example.org:35121",
-                "nodeID":10
+    "bat:batchState": {
+        "bat:batchID":"bid-8c0fa0c2-f3d7-4deb-bd49-f953f6752b59",
+        "bat:updateFlag":false,
+        "bat:targetQueue":"example.org:2181",
+        "bat:batchStatus":"QUEUED",
+        "bat:userAgent":"egh/Erik Hetzner",
+        "bat:submissionDate":"2011-08-31T15:40:26-07:00",
+        "bat:targetQueueNode":"/ingest.example.1",
+        "bat:batchProfile": {
+            "bat:owner":"ark:/99999/fk4tt4wsh",
+            "bat:creationDate":"2010-01-19T13:28:14-08:00",
+            "bat:targetStorage": {
+                "bat:storageLink":"http://example.org:35121",
+                "bat:nodeID":10
             },
-            "objectType":"MRT-curatorial",
-            "modificationDate":"2010-01-26T23:28:14-08:00",
-            "aggregateType":"",
-            "objectMinterURL":"https://example.org/ezid/shoulder/ark:/99999/fk4",
-            "collection": {
+            "bat:objectType":"MRT-curatorial",
+            "bat:modificationDate":"2010-01-26T23:28:14-08:00",
+            "bat:aggregateType":"",
+            "bat:objectMinterURL":"https://example.org/ezid/shoulder/ark:/99999/fk4",
+            "bat:collection": {
             },
-            "profileID":"merritt_content",
-            "profileDescription":"Merritt demo content",
-            "fixityURL":"http://example.org:33143",
-            "contactsEmail": {
-                "notification": {
-                    "contactEmail":"erik.hetzner@example.org"
+            "bat:profileID":"merritt_content",
+            "bat:profileDescription":"Merritt demo content",
+            "bat:fixityURL":"http://example.org:33143",
+            "bat:contactsEmail": {
+                "bat:notification": {
+                    "bat:contactEmail":"erik.hetzner@example.org"
                 }
             },
-            "identifierScheme":"ARK",
-            "identifierNamespace":"99999",
-            "objectRole":"MRT-content"
+            "bat:identifierScheme":"ARK",
+            "bat:identifierNamespace":"99999",
+            "bat:objectRole":"MRT-content"
         }
     }
 }

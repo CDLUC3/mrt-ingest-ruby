@@ -3,6 +3,7 @@
 
 require 'rubygems'
 
+require 'test/unit'
 require 'checkm'
 require 'fakeweb'
 require 'mocha'
