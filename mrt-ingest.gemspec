@@ -5,19 +5,18 @@ Gem::Specification.new do |s|
   s.name        = "mrt-ingest"
   s.version     = "0.0.3"
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Erik Hetzner"]
-  s.email       = ["mark.reyes@ucop.edu"]
+  s.authors     = ["Mark Reyes", "David Moles"]
+  s.email       = ["mark.reyes@ucop.edu", "david.moles@ucop.edu"]
   s.homepage    = "https://github.com/CDLUC3/mrt-ingest-ruby"
   s.summary     = %q{A client for Merritt ingest.}
-  s.description = %q{A client for the Merritt ingest system. More details available from http://wiki.ucop.edu/display/curation.}
+  s.description = %q{A client for the Merritt ingest system. More details available from https://github.com/CDLUC3/mrt-doc/wiki}
+  s.license     = "BSD-3-Clause"
 
-  s.add_dependency "json", ">=1.5.0"
-  s.add_dependency "rest-client", ">=1.6.0"
+  s.add_dependency "json", "~> 1.5", ">=1.5.0"
+  s.add_dependency "rest-client", "~> 1.6", ">=1.6.0"
 
-  s.rubyforge_project = "mrt-ingest"
-
-  s.files         = `hg locate`.split("\n")
-  s.test_files    = `hg locate --include '{spec,features}'`.split("\n")
-  s.executables   = `hg locate --include bin`.split("\n").map{ |f| File.basename(f) }
+  s.files         = `git ls-files -z`.split("\x0")
+  s.test_files    = s.files.grep(%r{^(test|spec|features)/})
+  s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
   s.require_paths = ["lib"]
 end
