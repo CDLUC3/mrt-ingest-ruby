@@ -18,7 +18,7 @@ module Mrt
         @mime_type = options[:mime_type]
         @size = options[:size]
         # @prefetch = options[:prefetch] || false
-        @prefetch = false
+        @prefetch = false # TODO: remove prefetch code
 
         case where
         when File, Tempfile
