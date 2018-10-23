@@ -14,14 +14,14 @@ Gem::Specification.new do |s|
   s.add_dependency "json", "~> 2.0"
   s.add_dependency "rest-client", "~> 2.0"
 
-  s.add_development_dependency "bundler"
+  s.add_development_dependency "bundler", '~> 1.16'
   s.add_development_dependency "checkm", "0.0.6"
   # TODO: put this back in once there's a 2.4-compatible release
   # s.add_development_dependency "fakeweb"
-  s.add_development_dependency "mocha"
-  s.add_development_dependency "rake"
-  s.add_development_dependency "shoulda"
-  s.add_development_dependency "test-unit"
+  s.add_development_dependency "mocha", '~> 1.7'
+  s.add_development_dependency "rake", '~> 12.0'
+  s.add_development_dependency "shoulda", '~> 3.6'
+  s.add_development_dependency "test-unit", '~> 3.2'
 
   s.files         = `git ls-files -z`.split("\x0")
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
