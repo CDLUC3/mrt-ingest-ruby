@@ -6,7 +6,7 @@ module Mrt
     # #File.
     class Component # :nodoc:
 
-      attr_reader :server
+      attr_reader :server, :uri
 
       def initialize(server, location, options)
         @server = server

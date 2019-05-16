@@ -20,9 +20,12 @@ Gem::Specification.new do |s|
   # s.add_development_dependency "fakeweb"
   s.add_development_dependency 'mocha', '~> 1.7'
   s.add_development_dependency 'rake', '~> 12.0'
+  s.add_development_dependency 'rspec', '~> 3.8'
   s.add_development_dependency 'rubocop', '~> 0.68'
   s.add_development_dependency 'shoulda', '~> 3.6'
-  s.add_development_dependency 'test-unit', '~> 3.2'
+  s.add_development_dependency 'simplecov', '~> 0.16'
+  s.add_development_dependency 'simplecov-console', '~> 0.4'
+  s.add_development_dependency 'webmock', '~> 3.5'
 
   s.files         = `git ls-files -z`.split("\x0")
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
