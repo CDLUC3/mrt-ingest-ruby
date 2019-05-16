@@ -2,7 +2,7 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "mrt-ingest"
-  s.version     = "0.0.4"
+  s.version     = "0.0.5"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Mark Reyes", "David Moles"]
   s.email       = ["mark.reyes@ucop.edu", "david.moles@ucop.edu"]
@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "bundler", '~> 1.16'
   s.add_development_dependency "checkm", "0.0.6"
-  # TODO: put this back in once there's a 2.4-compatible release
+  # TODO: put this back in once there's a 2.4-compatible release (see Gemfile)
   # s.add_development_dependency "fakeweb"
   s.add_development_dependency "mocha", '~> 1.7'
   s.add_development_dependency "rake", '~> 12.0'
