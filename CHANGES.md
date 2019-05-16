@@ -2,6 +2,7 @@
 
 - Invalid arguments (nil required parameters, string URLs where `URI` objects are expected, etc.) 
   now raise `ArgumentError` instead of `IngestException`.
+- Removes prefetch option from 0.0.3, which we weren't using, and which added complexity.
 
 ### Developer notes
 

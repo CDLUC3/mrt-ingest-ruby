@@ -14,10 +14,8 @@ module Mrt
         @digest = options[:digest]
         @mime_type = options[:mime_type]
         @size = options[:size]
-        # @prefetch = options[:prefetch] || false
-        @prefetch = false # TODO: remove prefetch code
 
-        init_uri(options, location)
+        init_uri(location)
       end
 
       class << self
@@ -57,9 +55,9 @@ module Mrt
         [File, Tempfile].any? { |c| location.is_a?(c) }
       end
 
-      def init_uri(options, location)
+      def init_uri(location)
         return init_from_file(location) if file_like?(location)
-        return init_from_uri(options, location) if location.is_a?(URI)
+        return init_from_uri(location) if location.is_a?(URI)
 
         raise ArgumentError, "Trying to add a component that is not a File or URI: #{location}"
       end
@@ -71,31 +69,10 @@ module Mrt
         @size = File.size(file.path) if @size.nil?
       end
 
-      def init_from_uri(options, uri)
+      def init_from_uri(uri)
         @name = File.basename(uri.to_s) if @name.nil?
-        if @prefetch
-          @uri, @digest = prefetch_and_hash(options, uri)
-        else
-          @uri = uri
-        end
+        @uri = uri
       end
-
-      # TODO: remove prefetch code
-      # rubocop:disable Security/Open
-      def prefetch_and_hash(options, remote_uri)
-        digest = Digest::MD5.new
-        local_uri, = server.add_file do |f|
-          open(remote_uri, (options[:prefetch_options] || {})) do |u|
-            while (buff = u.read(1024))
-              f << buff
-              digest << buff
-            end
-          end
-        end
-        [local_uri, Mrt::Ingest::MessageDigest::MD5.new(digest.hexdigest)]
-      end
-      # rubocop:enable Security/Open
-
     end
   end
 end
