@@ -32,7 +32,7 @@ module Mrt
           digest = Digest::MD5.new
           File.open(file.path, 'r') do |f|
             buff = ''
-            digest << buff while f.read(1024, buff) != nil
+            digest << buff until f.read(1024, buff).nil?
           end
           Mrt::Ingest::MessageDigest::MD5.new(digest.hexdigest)
         end

@@ -1,7 +1,6 @@
 # Author::    Erik Hetzner  (mailto:erik.hetzner@ucop.edu)
 # Copyright:: Copyright (c) 2011, Regents of the University of California
 
-require 'mrt/ingest'
 require 'tempfile'
 require 'uri'
 require 'open-uri'
@@ -9,53 +8,6 @@ require 'digest/md5'
 
 module Mrt
   module Ingest
-    # Represents a component of an object to ingest. Either a #URI or a
-    # #File.
-    class Component # :nodoc:
-      def initialize(server, where, options)
-        @name = options[:name]
-        @digest = options[:digest]
-        @mime_type = options[:mime_type]
-        @size = options[:size]
-        # @prefetch = options[:prefetch] || false
-        @prefetch = false # TODO: remove prefetch code
-
-        case where
-        when File, Tempfile
-          @name = File.basename(where.path) if @name.nil?
-          @uri = server.add_file(where)[0]
-          @digest = Mrt::Ingest::MessageDigest::MD5.from_file(where) if @digest.nil?
-          @size = File.size(where.path) if @size.nil?
-        when URI
-          @name = File.basename(where.to_s) if @name.nil?
-          if @prefetch
-            digest = Digest::MD5.new
-            @uri, ignore = server.add_file do |f|
-              open(where, (options[:prefetch_options] || {})) do |u|
-                while (buff = u.read(1024))
-                  f << buff
-                  digest << buff
-                end
-              end
-            end
-            @digest = Mrt::Ingest::MessageDigest::MD5.new(digest.hexdigest)
-          else
-            @uri = where
-          end
-        else
-          raise IngestException, 'Trying to add a component that is not a File or URI'
-        end
-      end
-
-      def to_manifest_entry
-        (digest_alg, digest_value) = if @digest.nil?
-                                       ['', '']
-                                     else
-                                       [@digest.type, @digest.value]
-                                     end
-        "#{@uri} | #{digest_alg} | #{digest_value} | #{@size || ''} | | #{@name} | #{@mime_type || ''}\n"
-      end
-    end
 
     # An object prepared for ingest into Merritt.
     class IObject
@@ -84,35 +36,12 @@ module Mrt
 
       # Make a Mrt::Ingest::Request object for this mrt-object
       def mk_request(profile, submitter)
-        erc_component = case @erc
-                        when URI, File, Tempfile
-                          Component.new(@server, @erc, name: 'mrt-erc.txt')
-                        when Hash
-                          uri_str, path = @server.add_file do |f|
-                            f.write("erc:\n")
-                            @erc.each_pair do |k, v|
-                              f.write("#{k}: #{v}\n")
-                            end
-                          end
-                          Component.new(@server,
-                                        URI.parse(uri_str),
-                                        name: 'mrt-erc.txt',
-                                        digest: Mrt::Ingest::MessageDigest::MD5.from_file(File.new(path)))
-                        else
-                          raise IngestException, 'Bad ERC supplied: must be a URI, File, or Hash'
-                        end
         manifest_file = Tempfile.new('mrt-ingest')
+        erc_component = Component.from_erc(@server, @erc)
         mk_manifest(manifest_file, erc_component)
         # reset to beginning
         manifest_file.open
-        Mrt::Ingest::Request
-          .new(file: manifest_file,
-               filename: manifest_file.path.split(%r{/}).last,
-               type: 'object-manifest',
-               submitter: submitter,
-               profile: profile,
-               local_identifier: @local_identifier,
-               primary_identifier: @primary_identifier)
+        new_request(manifest_file, profile, submitter)
       end
 
       def start_server # :nodoc:
@@ -127,6 +56,7 @@ module Mrt
         @server.stop_server
       end
 
+      # rubocop:disable Metrics/LineLength
       def mk_manifest(manifest, erc_component) # :nodoc:
         manifest.write("#%checkm_0.7\n")
         manifest.write("#%profile http://uc3.cdlib.org/registry/ingest/manifest/mrt-ingest-manifest\n")
@@ -139,6 +69,7 @@ module Mrt
         manifest.write(erc_component.to_manifest_entry)
         manifest.write("#%EOF\n")
       end
+      # rubocop:enable Metrics/LineLength
 
       # Begin an ingest on the given client, with a profile and
       # submitter.
@@ -146,7 +77,6 @@ module Mrt
         request = mk_request(profile, submitter)
         start_server
         @response = client.ingest(request)
-        @response
       end
 
       # Wait for the ingest of this object to finish.
@@ -155,6 +85,21 @@ module Mrt
         # we will check the status via the ingest server.
         join_server
       end
+
+      private
+
+      def new_request(manifest_file, profile, submitter)
+        Mrt::Ingest::Request.new(
+          file: manifest_file,
+          filename: manifest_file.path.split(%r{/}).last,
+          type: 'object-manifest',
+          submitter: submitter,
+          profile: profile,
+          local_identifier: @local_identifier,
+          primary_identifier: @primary_identifier
+        )
+      end
+
     end
   end
 end

@@ -28,26 +28,21 @@ module Mrt
         @known_paths = {}
         @requested = {}
         @port = get_open_port
-        @file_callback = ->(req, _res) do
-          @requested[req.path] ||= true
-        end
-
-        config = { Port: @port }
-        @server = WEBrick::HTTPServer.new(config)
-        @server.mount('/', WEBrick::HTTPServlet::FileHandler, @dir,
-                      { FileCallback: @file_callback })
+        @file_callback = ->(req, _res) { @requested[req.path] ||= true }
+        @server = WEBrick::HTTPServer.new(Port: @port)
+        @server.mount('/', WEBrick::HTTPServlet::FileHandler, @dir, FileCallback: @file_callback)
       end
 
       # Return true if each file has been served.
       def finished?
         Dir.entries(@dir).each do |entry|
-          next if entry == '.' || entry == '..'
+          next if %w[. ..].include?(entry)
           return false if @requested["/#{entry}"].nil?
         end
         true
       end
 
-      def get_temppath
+      def temppath
         tmpfile = Tempfile.new('tmp', @dir)
         tmppath = tmpfile.path
         tmpfile.close!
@@ -59,23 +54,19 @@ module Mrt
           end
         end
         # need to retry, there was a collision
-        get_temppath
+        temppath
       end
 
       # Add a file to this server. Returns the URL to use
       # to fetch the file & the file path
       def add_file(sourcefile = nil)
-        fullpath = get_temppath
+        fullpath = temppath
         path = File.basename(fullpath)
-        if !sourcefile.nil?
-          @server.mount("/#{path}",
-                        WEBrick::HTTPServlet::FileHandler,
-                        sourcefile.path,
-                        { FileCallback: @file_callback })
+
+        if sourcefile
+          @server.mount("/#{path}", WEBrick::HTTPServlet::FileHandler, sourcefile.path, FileCallback: @file_callback)
         else
-          File.open(fullpath, 'w+') do |f|
-            yield f
-          end
+          File.open(fullpath, 'w+') { |f| yield f }
         end
         ["http://#{Socket.gethostname}:#{@port}/#{path}", fullpath]
       end
@@ -99,7 +90,7 @@ module Mrt
       # Wait for server to finish serving all files.
       def join_server
         # ensure that each file is requested once before shutting down
-        until finished? do sleep(1) end
+        sleep(1) until finished?
         @server.shutdown
         @thread.join
       end

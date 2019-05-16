@@ -8,49 +8,75 @@ module Mrt
 
     # Represents a request to be sent to an ingest server.
     class Request
-      attr_accessor :creator, :date, :local_identifier,
-                    :primary_identifier, :profile, :note, :submitter,
-                    :title, :type
 
-      # Options is a hash; required are :profile, :submitter, :type.
-      # May also include :creator, :date, :digest, :file, :filename,
-      # :local_identifier, :primary_identifier, :note, :title.
-      def initialize(options)
-        @creator = options[:creator]
-        @date = options[:date]
-        @digest = options[:digest]
-        @file = options[:file]
-        @filename = options[:filename]
-        @local_identifier = options[:local_identifier]
-        @primary_identifier = options[:primary_identifier]
-        @profile = options[:profile]
-        @note = options[:note]
-        @submitter = options[:submitter]
-        @title = options[:title]
-        @type = options[:type]
-        %i[profile submitter type].each do |arg|
-          raise RequestException, "#{arg} is required." if options[arg].nil?
-        end
+      attr_accessor :creator
+      attr_accessor :date
+      attr_accessor :digest
+      attr_accessor :file
+      attr_accessor :filename
+      attr_accessor :local_identifier
+      attr_accessor :note
+      attr_accessor :primary_identifier
+      attr_accessor :profile
+      attr_accessor :submitter
+      attr_accessor :title
+      attr_accessor :type
+
+      # rubocop:disable Metrics/MethodLength, Metrics/ParameterLists
+      def initialize(
+        profile:, submitter:, type:,
+        creator: nil, date: nil, digest: nil, file: nil, filename: nil,
+        local_identifier: nil, primary_identifier: nil, note: nil, title: nil
+      )
+        raise ArgumentError, 'profile cannot be nil' unless profile
+        raise ArgumentError, 'profile cannot be submitter' unless submitter
+        raise ArgumentError, 'profile cannot be type' unless type
+
+        @creator = creator
+        @date = date
+        @digest = digest
+        @file = file
+        @filename = filename
+        @local_identifier = local_identifier
+        @primary_identifier = primary_identifier
+        @profile = profile
+        @note = note
+        @submitter = submitter
+        @title = title
+        @type = type
       end
+      # rubocop:enable Metrics/MethodLength, Metrics/ParameterLists
 
       # Returns a hash of arguments suitable for sending to a server.
+      # rubocop: disable Metrics/MethodLength, Metrics/AbcSize
       def mk_args
         {
-          'creator' => @creator,
-          'date' => @date,
-          'digestType' => ((!@digest.nil? && @digest.type) || nil),
-          'digestValue' => ((!@digest.nil? && @digest.value) || nil),
-          'file' => @file,
-          'filename' => @filename,
-          'localIdentifier' => @local_identifier,
-          'primaryIdentifier' => @primary_identifier,
-          'profile' => @profile,
-          'note' => @note,
+          'creator' => creator,
+          'date' => date,
+          'digestType' => digest_type,
+          'digestValue' => digest_value,
+          'file' => file,
+          'filename' => filename,
+          'localIdentifier' => local_identifier,
+          'primaryIdentifier' => primary_identifier,
+          'profile' => profile,
+          'note' => note,
           'responseForm' => 'json',
-          'submitter' => @submitter,
-          'title' => @title,
-          'type' => @type
+          'submitter' => submitter,
+          'title' => title,
+          'type' => type
         }.reject { |_k, v| v.nil? || (v == '') }
+      end
+      # rubocop: enable Metrics/MethodLength, Metrics/AbcSize
+
+      private
+
+      def digest_value
+        digest && digest.value
+      end
+
+      def digest_type
+        digest && digest.type
       end
     end
   end

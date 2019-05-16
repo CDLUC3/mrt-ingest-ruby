@@ -91,7 +91,7 @@ class TestIObject < Test::Unit::TestCase
     # end
 
     should "not be able to add a non-URI component" do
-      assert_raise(Mrt::Ingest::IngestException) do
+      assert_raise(ArgumentError) do
         @iobject.add_component("http://example.org/file")
       end
     end

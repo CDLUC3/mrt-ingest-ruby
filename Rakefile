@@ -3,7 +3,7 @@ require 'rake/testtask'
 require 'rdoc/task'
 
 require 'bundler'
-include Rake::DSL
+
 Bundler::GemHelper.install_tasks
 
 task default: [:test]
