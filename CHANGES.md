@@ -1,2 +1,3 @@
-## 0.0.5 (16 May 2019)
+## 0.0.5 (Next)
 
+Update code for Ruby 2.4+; add style checks
