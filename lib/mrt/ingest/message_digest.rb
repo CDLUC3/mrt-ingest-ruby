@@ -13,37 +13,35 @@ module Mrt
           @type  = type
         end
       end
-      
+
       # Represents a SHA256 digest suitable for a Checkm manifest.
       class SHA256 < Base
         def initialize(value)
-          super(value, "sha-256")
+          super(value, 'sha-256')
         end
       end
 
       # Represents an MD5 digest suitable for a Checkm manifest.
       class MD5 < Base
         def initialize(value)
-          super(value, "md5")
+          super(value, 'md5')
         end
-        
+
         # Generate a digest from a file.
         def self.from_file(file)
           digest = Digest::MD5.new
           File.open(file.path, 'r') do |f|
-            buff = ""
-            while (f.read(1024, buff) != nil)
-              digest << buff
-            end
+            buff = ''
+            digest << buff while f.read(1024, buff) != nil
           end
-          return Mrt::Ingest::MessageDigest::MD5.new(digest.hexdigest)
+          Mrt::Ingest::MessageDigest::MD5.new(digest.hexdigest)
         end
       end
 
       # Represents a SHA1 digest suitable for a Checkm manifest.
       class SHA1 < Base
         def initialize(value)
-          super(value, "sha1")
+          super(value, 'sha1')
         end
       end
     end

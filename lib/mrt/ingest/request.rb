@@ -3,7 +3,7 @@
 
 module Mrt
   module Ingest
-    class RequestException < Exception
+    class RequestException < RuntimeError
     end
 
     # Represents a request to be sent to an ingest server.
@@ -28,29 +28,29 @@ module Mrt
         @submitter = options[:submitter]
         @title = options[:title]
         @type = options[:type]
-        [:profile, :submitter, :type].each do |arg|
-          raise RequestException.new("#{arg} is required.") if options[arg].nil?
+        %i[profile submitter type].each do |arg|
+          raise RequestException, "#{arg} is required." if options[arg].nil?
         end
       end
-      
+
       # Returns a hash of arguments suitable for sending to a server.
       def mk_args
-        return {
-          'creator'           => @creator,
-          'date'              => @date,
-          'digestType'        => ((!@digest.nil? && @digest.type) || nil),
-          'digestValue'       => ((!@digest.nil? && @digest.value) || nil),
-          'file'              => @file,
-          'filename'          => @filename,
-          'localIdentifier'   => @local_identifier,
+        {
+          'creator' => @creator,
+          'date' => @date,
+          'digestType' => ((!@digest.nil? && @digest.type) || nil),
+          'digestValue' => ((!@digest.nil? && @digest.value) || nil),
+          'file' => @file,
+          'filename' => @filename,
+          'localIdentifier' => @local_identifier,
           'primaryIdentifier' => @primary_identifier,
-          'profile'           => @profile,
-          'note'              => @note,
-          'responseForm'      => 'json',
-          'submitter'         => @submitter,
-          'title'             => @title,
-          'type'              => @type
-        }.reject{|k, v| v.nil? || (v == '')}
+          'profile' => @profile,
+          'note' => @note,
+          'responseForm' => 'json',
+          'submitter' => @submitter,
+          'title' => @title,
+          'type' => @type
+        }.reject { |_k, v| v.nil? || (v == '') }
       end
     end
   end

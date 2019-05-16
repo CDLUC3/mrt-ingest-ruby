@@ -6,7 +6,7 @@ require 'bundler'
 include Rake::DSL
 Bundler::GemHelper.install_tasks
 
-task :default => [:test]
+task default: [:test]
 Rake::TestTask.new(:test) do |t|
   t.libs << 'lib' << 'test'
   t.pattern = 'test/**/test_*.rb'
@@ -14,7 +14,7 @@ Rake::TestTask.new(:test) do |t|
 end
 
 RDoc::Task.new do |rd|
-  rd.title = "Merritt Ingest Client"
+  rd.title = 'Merritt Ingest Client'
 
-  rd.options += ['-f', 'darkfish',]
+  rd.options += ['-f', 'darkfish']
 end

@@ -12,17 +12,17 @@ module Mrt
       def initialize(data)
         @parsed = JSON.parse(data)['bat:batchState']
       end
-      
+
       def batch_id
-        return @parsed['bat:batchID']
+        @parsed['bat:batchID']
       end
-      
+
       def user_agent
-        return @parsed['bat:userAgent']
+        @parsed['bat:userAgent']
       end
-      
+
       def submission_date
-        return Time.parse(@parsed['bat:submissionDate'])
+        Time.parse(@parsed['bat:submissionDate'])
       end
     end
   end
