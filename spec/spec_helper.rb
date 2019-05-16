@@ -25,7 +25,8 @@ require 'webmock/rspec'
 RSpec.configure do |config|
   config.raise_errors_for_deprecations!
   config.mock_with :rspec
-  config.before(:each) { WebMock.disable_net_connect! }
+  hostname_lower = Socket.gethostname.downcase # https://github.com/bblimke/webmock/issues/819
+  config.before(:each) { WebMock.disable_net_connect!(allow: hostname_lower) }
   config.after(:each) { WebMock.allow_net_connect! }
 end
 

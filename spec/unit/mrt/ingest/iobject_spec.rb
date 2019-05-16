@@ -4,11 +4,6 @@ require 'checkm'
 module Mrt::Ingest
   describe IObject do
 
-    before(:each) do
-      # TODO: scope to hostname
-      WebMock.allow_net_connect!
-    end
-
     def parse_object_manifest(iobject)
       req = iobject.mk_request('profile', 'submitter')
       args = req.mk_args

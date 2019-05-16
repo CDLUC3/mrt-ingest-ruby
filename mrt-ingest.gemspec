@@ -16,8 +16,6 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'bundler', '~> 1.16'
   s.add_development_dependency 'checkm', '0.0.6'
-  # TODO: put this back in once there's a 2.4-compatible release (see Gemfile)
-  # s.add_development_dependency "fakeweb"
   s.add_development_dependency 'mocha', '~> 1.7'
   s.add_development_dependency 'rake', '~> 12.0'
   s.add_development_dependency 'rspec', '~> 3.8'

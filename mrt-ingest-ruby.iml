@@ -19,7 +19,6 @@
     <orderEntry type="library" scope="PROVIDED" name="diff-lcs (v1.3, RVM: ruby-2.4.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="docile (v1.3.1, RVM: ruby-2.4.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="domain_name (v0.5.20180417, RVM: ruby-2.4.4) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="fakeweb (v1.3.0@2b08c1, RVM: ruby-2.4.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="hashdiff (v0.3.9, RVM: ruby-2.4.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="hirb (v0.7.3, RVM: ruby-2.4.4) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="http-cookie (v1.0.3, RVM: ruby-2.4.4) [gem]" level="application" />
