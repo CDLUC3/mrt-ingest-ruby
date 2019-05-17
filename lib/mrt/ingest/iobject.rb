@@ -36,13 +36,13 @@ module Mrt
       end
 
       # Make a Mrt::Ingest::Request object for this mrt-object
-      def mk_request(profile, submitter)
+      def mk_request(profile, user_agent)
         manifest_file = Tempfile.new('mrt-ingest')
         erc_component = Component.from_erc(@server, @erc)
         mk_manifest(manifest_file, erc_component)
         # reset to beginning
         manifest_file.open
-        new_request(manifest_file, profile, submitter)
+        new_request(manifest_file, profile, user_agent)
       end
 
       def start_server # :nodoc:
@@ -89,12 +89,12 @@ module Mrt
 
       private
 
-      def new_request(manifest_file, profile, submitter)
+      def new_request(manifest_file, profile, user_agent)
         Mrt::Ingest::Request.new(
           file: manifest_file,
           filename: manifest_file.path.split(%r{/}).last,
           type: 'object-manifest',
-          submitter: submitter,
+          submitter: user_agent,
           profile: profile,
           local_identifier: @local_identifier,
           primary_identifier: @primary_identifier
