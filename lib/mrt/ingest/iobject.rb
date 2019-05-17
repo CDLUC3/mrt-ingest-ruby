@@ -13,6 +13,7 @@ module Mrt
     class IObject
 
       attr_accessor :primary_identifier, :local_identifier, :erc
+      attr_reader :server
 
       # Options can have the keys :primary_identifier,
       # :local_identifier, :server, or :erc. :erc can be a #File, #Uri

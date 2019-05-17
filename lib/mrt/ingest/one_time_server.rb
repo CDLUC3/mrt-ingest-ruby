@@ -7,6 +7,9 @@ require 'webrick'
 module Mrt
   module Ingest
     class OneTimeServer
+
+      attr_reader :dir, :port
+
       # Find an open port, starting with start and adding one until we get
       # an open port
       def get_open_port(start = 8081)
