@@ -1,3 +1,5 @@
+## 0.0.6 (Next)
+
 ## 0.0.5 (2019-05-17)
 
 - Invalid arguments (nil required parameters, string URLs where `URI` objects are expected, etc.) 
