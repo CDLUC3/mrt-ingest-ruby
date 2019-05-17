@@ -46,9 +46,10 @@ module Mrt::Ingest
         @response = Response.new(RESPONSE_JSON)
       end
 
-      it 'should parse the batch ID' do
+      it 'should parse the response' do
         expect(@response.batch_id).to eq('bid-8c0fa0c2-f3d7-4deb-bd49-f953f6752b59')
         expect(@response.submission_date).to eq(Time.at(1_314_830_426))
+        expect(@response.user_agent).to eq('egh/Erik Hetzner')
       end
     end
   end
