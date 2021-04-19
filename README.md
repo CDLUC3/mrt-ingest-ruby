@@ -11,7 +11,7 @@ This library provides utility methods for preparing content for ingest into Merr
 ## Used By
 
 This code is used by 
-- [Merritt UI](https://github.com/CDLUC3/mrt-dashboard)gest-ruby)
+- [Merritt UI](https://github.com/CDLUC3/mrt-dashboard)
 
 ## For external audiences
 
