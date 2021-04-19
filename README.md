@@ -13,8 +13,6 @@ This library provides utility methods for preparing content for ingest into Merr
 This code is used by 
 - [Merritt UI](https://github.com/CDLUC3/mrt-dashboard)
 
-## For external audiences
-
 ## Build instructions
 
 ```
