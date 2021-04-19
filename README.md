@@ -1,19 +1,28 @@
-# mrt-ingest (ruby)
+# Merritt Ingest Gem
 
 [![Build Status](https://travis-ci.org/CDLUC3/mrt-ingest-ruby.svg?branch=master)](https://travis-ci.org/CDLUC3/mrt-ingest-ruby)
 
-## What?
+This microservice is part of the [Merritt Preservation System](https://github.com/CDLUC3/mrt-doc).
 
-A Ruby ingest client for [Merritt](https://merritt.cdlib.org/).
+## Purpose
 
-## Install
+This library provides utility methods for preparing content for ingest into Merritt. 
+
+## Used By
+
+This code is used by 
+- [Merritt UI](https://github.com/CDLUC3/mrt-dashboard)gest-ruby)
+
+## For external audiences
+
+## Build instructions
 
 ```
 $ gem build mrt-ingest.gemspec
 $ sudo gem install mrt-ingest-0.0.1.gem
 ```
 
-## Usage
+## Test instructions
 
 The code below creates a new Merritt object with content consisting of two local files
 and one remote URL. The object is submitted to Merritt as a manifest, with the manifest,
@@ -54,3 +63,5 @@ obj.finish_ingest # waits for all files to be served, then shuts down
 
 For a more detailed example, see the [Merritt::Atom](https://github.com/CDLUC3/mrt-dashboard/tree/master/lib/merritt/atom)
 module of the Merritt dashboard.
+
+## Internal Links
