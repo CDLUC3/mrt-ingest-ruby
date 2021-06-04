@@ -25,9 +25,16 @@ Layout/MultilineMethodCallIndentation:
 Layout/MultilineOperationIndentation:
   Enabled: false
 
+Layout/MethodLength:
+  CountComments: false  # count full line comments?
+  Max: 20
+
 # Reasonable line-length check; it's too easy for the cure to be worse than the disease
 Metrics/LineLength:
   Max: 150
+
+Metrics/ParameterLists:
+  Max: 15
 
 # Confusing and weird
 Naming/VariableNumber:
@@ -38,7 +45,7 @@ Naming/MemoizedInstanceVariableName:
   Enabled: False
 
 # It works in context, trust us
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: False
 
 # Do what's readable in the context you're in
@@ -50,8 +57,8 @@ Style/AsciiComments:
   Enabled: false
 
 # Sometimes we want to distinguish hash parameters from keyword arguments
-Style/BracesAroundHashParameters:
-  Enabled: False
+#Style/BracesAroundHashParameters:
+  #Enabled: False
 
 # Seriously?
 Style/CommentedKeyword:
