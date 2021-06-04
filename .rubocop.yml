@@ -50,8 +50,8 @@ Style/AsciiComments:
   Enabled: false
 
 # Sometimes we want to distinguish hash parameters from keyword arguments
-Style/BracesAroundHashParameters:
-  Enabled: False
+#Style/BracesAroundHashParameters:
+  #Enabled: False
 
 # Seriously?
 Style/CommentedKeyword:
