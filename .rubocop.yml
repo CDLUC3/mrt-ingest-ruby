@@ -38,7 +38,7 @@ Naming/MemoizedInstanceVariableName:
   Enabled: False
 
 # It works in context, trust us
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: False
 
 # Do what's readable in the context you're in
