@@ -48,7 +48,7 @@ module Mrt
       # rubocop:enable Metrics/MethodLength, Metrics/ParameterLists
 
       # Returns a hash of arguments suitable for sending to a server.
-      # rubocop: disable Metrics/MethodLength, Metrics/AbcSize
+      # rubocop: enable Metrics/MethodLength, Metrics/AbcSize
       def mk_args
         {
           'creator' => creator,
