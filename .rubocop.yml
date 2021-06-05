@@ -29,6 +29,10 @@ Layout/MultilineOperationIndentation:
 Metrics/LineLength:
   Max: 150
 
+Metrics/MethodLength:
+  CountComments: false  # count full line comments?
+  Max: 20
+
 # Confusing and weird
 Naming/VariableNumber:
   Enabled: False
