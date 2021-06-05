@@ -33,6 +33,9 @@ Layout/MethodLength:
 Metrics/LineLength:
   Max: 150
 
+Metrics/ParameterLists:
+  Max: 15
+
 # Confusing and weird
 Naming/VariableNumber:
   Enabled: False
