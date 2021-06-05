@@ -22,7 +22,6 @@ module Mrt
       attr_accessor :title
       attr_accessor :type
 
-      # rubocop:disable Metrics/MethodLength, Metrics/ParameterLists
       def initialize(
         profile:, submitter:, type:,
         creator: nil, date: nil, digest: nil, file: nil, filename: nil,
@@ -45,11 +44,8 @@ module Mrt
         @title = title
         @type = type
       end
-      # rubocop:enable Metrics/MethodLength, Metrics/ParameterLists
 
       # Returns a hash of arguments suitable for sending to a server.
-      # rubocop: enable Metrics/MethodLength, Metrics/AbcSize
-      # rubobop: disable Metrics/MethodLength, Metrics/ModuleLength
       def mk_args
         {
           'creator' => creator,
@@ -68,7 +64,6 @@ module Mrt
           'type' => type
         }.reject { |_k, v| v.nil? || (v == '') }
       end
-      # rubocop: enable Metrics/MethodLength, Metrics/AbcSize
 
       private
 
