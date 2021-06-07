@@ -1,6 +1,7 @@
 $LOAD_PATH.push File.expand_path('lib', __dir__)
 
 Gem::Specification.new do |s|
+  s.required_ruby_version = '>= 2.4.0'
   s.name        = 'mrt-ingest'
   s.version     = '0.0.5'
   s.platform    = Gem::Platform::RUBY
@@ -14,7 +15,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'json', '~> 2.0'
   s.add_dependency 'rest-client', '~> 2.0'
 
-  s.add_development_dependency 'bundler', '~> 1.16'
+  s.add_development_dependency 'bundler', '>= 2.2.10'
   s.add_development_dependency 'checkm', '0.0.6'
   s.add_development_dependency 'mocha', '~> 1.7'
   s.add_development_dependency 'rake', '~> 12.0'

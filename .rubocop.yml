@@ -26,7 +26,7 @@ Layout/MultilineOperationIndentation:
   Enabled: false
 
 # Reasonable line-length check; it's too easy for the cure to be worse than the disease
-Metrics/LineLength:
+Layout/LineLength:
   Max: 150
 
 # Confusing and weird
@@ -38,7 +38,7 @@ Naming/MemoizedInstanceVariableName:
   Enabled: False
 
 # It works in context, trust us
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: False
 
 # Do what's readable in the context you're in
@@ -48,10 +48,6 @@ Style/AccessModifierDeclarations:
 # 👎 to cultural imperialism
 Style/AsciiComments:
   Enabled: false
-
-# Sometimes we want to distinguish hash parameters from keyword arguments
-Style/BracesAroundHashParameters:
-  Enabled: False
 
 # Seriously?
 Style/CommentedKeyword:
