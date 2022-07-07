@@ -3,7 +3,7 @@ $LOAD_PATH.push File.expand_path('lib', __dir__)
 Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.4.0'
   s.name        = 'mrt-ingest'
-  s.version     = '0.0.6'
+  s.version     = '0.0.7'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Mark Reyes', 'David Moles']
   s.email       = ['mark.reyes@ucop.edu', 'david.moles@ucop.edu']
