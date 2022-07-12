@@ -12,7 +12,7 @@ module Mrt
     # An object prepared for ingest into Merritt.
     class IObject
 
-      attr_accessor :primary_identifier, :local_identifier, :erc
+      attr_accessor :primary_identifier, :local_identifier, :erc, :what, :who, :when
 
       # Options can have the keys :primary_identifier,
       # :local_identifier, or :erc. :erc can be a #File, #Uri
@@ -78,9 +78,9 @@ module Mrt
           type: 'object-manifest',
           submitter: user_agent,
           profile: profile,
-          title: @erc[:what],
-          creator: @erc[:who],
-          date: @erc[:when],
+          title: @erc['what'],
+          creator: @erc['who'],
+          date: @erc['when'],
           local_identifier: @local_identifier,
           primary_identifier: @primary_identifier
         )

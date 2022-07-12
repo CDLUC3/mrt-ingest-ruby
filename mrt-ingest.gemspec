@@ -3,7 +3,7 @@ $LOAD_PATH.push File.expand_path('lib', __dir__)
 Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.4.0'
   s.name        = 'mrt-ingest'
-  s.version     = '0.0.7'
+  s.version     = '0.0.10'
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Mark Reyes', 'David Moles']
   s.email       = ['mark.reyes@ucop.edu', 'david.moles@ucop.edu']
@@ -12,10 +12,11 @@ Gem::Specification.new do |s|
   s.description = 'A client for the Merritt ingest system. More details available from https://github.com/CDLUC3/mrt-doc/wiki'
   s.license     = 'BSD-3-Clause'
 
-  s.add_dependency 'json', '~> 2.0'
-  s.add_dependency 'rest-client', '~> 2.0'
+  # s.add_dependency 'json', '~> 2.1'
+  s.add_dependency 'rest-client', '~> 2.1'
 
-  s.add_development_dependency 'bundler', '>= 2.2.10'
+
+  # s.add_development_dependency 'bundler', '>= 2.2.10'
   s.add_development_dependency 'checkm', '0.0.6'
   s.add_development_dependency 'mocha', '~> 1.7'
   s.add_development_dependency 'rake', '~> 12.0'
