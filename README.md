@@ -8,6 +8,8 @@ This microservice is part of the [Merritt Preservation System](https://github.co
 
 This library provides utility methods for preparing content for ingest into Merritt. 
 
+See https://rubygems.org/gems/mrt-ingest
+
 ## Used By
 
 This code is used by 
