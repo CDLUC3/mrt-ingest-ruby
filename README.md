@@ -13,7 +13,7 @@ See https://rubygems.org/gems/mrt-ingest
 ## Used By
 
 This code is used by 
-- [Merritt UI](https://github.com/CDLUC3/mrt-dashboard)
+- [Merritt Atom - Nuxeo Processing](https://github.com/CDLUC3/mrt-atom)
 
 ## Build instructions
 
