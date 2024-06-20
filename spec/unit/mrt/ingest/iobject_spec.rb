@@ -81,11 +81,9 @@ module Mrt::Ingest
     def check_erc_content(iobject, asserted_erc)
       erc_entry = get_uri_for_name(iobject, 'mrt-erc.txt')
       expect(erc_entry).not_to be_nil
-      iobject.start_server
       begin
         expect(parse_erc_entry(erc_entry)).to eq(asserted_erc)
       ensure
-        iobject.stop_server
       end
     end
 
@@ -137,11 +135,9 @@ module Mrt::Ingest
 
       it 'should serve a valid mrt-erc.txt entry' do
         expect(@erc_entry).not_to be_nil
-        @iobject.start_server
         begin
           open(@erc_entry.values[0]).read.lines.to_a
         ensure
-          @iobject.stop_server
         end
       end
 
@@ -186,11 +182,9 @@ module Mrt::Ingest
           manifest = parse_object_manifest(iobject)
           expect(manifest).not_to(be_nil)
           expect(uri_entry).not_to be_nil
-          iobject.start_server
           begin
             expect(open(uri_entry.values[0]).read).to eq(FILE_CONTENT)
           ensure
-            iobject.stop_server
           end
         end
       end
@@ -221,9 +215,8 @@ module Mrt::Ingest
         @iobject.start_ingest(@client, 'example_profile', 'Atom processor/Example collection')
 
         # TODO: just mock the server
-        server = @iobject.server
-        files = Dir.entries(server.dir).reject { |e| %w[. ..].include?(e) }
-        urls = files.map { |f| "http://#{Socket.gethostname}:#{server.port}/#{f}" }
+        # files = Dir.entries(server.dir).reject { |e| %w[. ..].include?(e) }
+        # urls = files.map { |f| "http://#{Socket.gethostname}:#{server.port}/#{f}" }
 
         client_process_id = fork do
           begin

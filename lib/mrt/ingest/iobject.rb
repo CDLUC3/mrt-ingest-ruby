@@ -12,18 +12,16 @@ module Mrt
     # An object prepared for ingest into Merritt.
     class IObject
 
-      attr_accessor :primary_identifier, :local_identifier, :erc
-      attr_reader :server
+      attr_accessor :primary_identifier, :local_identifier, :erc, :what, :who, :when
 
       # Options can have the keys :primary_identifier,
-      # :local_identifier, :server, or :erc. :erc can be a #File, #Uri
-      # or a #Hash of metadata. :server is a #OneTimeServer.
+      # :local_identifier, or :erc. :erc can be a #File, #Uri
+      # or a #Hash of metadata. 
       def initialize(options = {})
         @primary_identifier = options[:primary_identifier]
         @local_identifier = options[:local_identifier]
         @erc = options[:erc] || {}
         @components = []
-        @server = options[:server] || Mrt::Ingest::OneTimeServer.new
       end
 
       # Add a component to the object. where can be either a #URI or a
@@ -32,33 +30,20 @@ module Mrt
       # subclass of Mrt::Ingest::MessageDigest::Base. If where is a
       # #File, it will be hosted on an embedded web server.
       def add_component(where, options = {})
-        @components.push(Component.new(@server, where, options))
+        @components.push(Component.new(where, options))
       end
 
       # Make a Mrt::Ingest::Request object for this mrt-object
       def mk_request(profile, user_agent)
         manifest_file = Tempfile.new('mrt-ingest')
-        erc_component = Component.from_erc(@server, @erc)
-        mk_manifest(manifest_file, erc_component)
+        mk_manifest(manifest_file)
         # reset to beginning
         manifest_file.open
         new_request(manifest_file, profile, user_agent)
       end
 
-      def start_server # :nodoc:
-        @server.start_server
-      end
-
-      def join_server # :nodoc:
-        @server.join_server
-      end
-
-      def stop_server # :nodoc:
-        @server.stop_server
-      end
-
       # rubocop:disable Metrics/LineLength
-      def mk_manifest(manifest, erc_component) # :nodoc:
+      def mk_manifest(manifest) # :nodoc:
         manifest.write("#%checkm_0.7\n")
         manifest.write("#%profile http://uc3.cdlib.org/registry/ingest/manifest/mrt-ingest-manifest\n")
         manifest.write("#%prefix | mrt: | http://uc3.cdlib.org/ontology/mom#\n")
@@ -67,7 +52,6 @@ module Mrt
         @components.each do |c|
           manifest.write(c.to_manifest_entry)
         end
-        manifest.write(erc_component.to_manifest_entry)
         manifest.write("#%EOF\n")
       end
       # rubocop:enable Metrics/LineLength
@@ -76,7 +60,6 @@ module Mrt
       # submitter.
       def start_ingest(client, profile, submitter)
         request = mk_request(profile, submitter)
-        start_server
         @response = client.ingest(request)
       end
 
@@ -84,7 +67,6 @@ module Mrt
       def finish_ingest
         # XXX Right now we only join the hosting server; in the future
         # we will check the status via the ingest server.
-        join_server
       end
 
       private
@@ -96,6 +78,9 @@ module Mrt
           type: 'object-manifest',
           submitter: user_agent,
           profile: profile,
+          title: @erc['what'],
+          creator: @erc['who'],
+          date: @erc['when'],
           local_identifier: @local_identifier,
           primary_identifier: @primary_identifier
         )
